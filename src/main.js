@@ -19,6 +19,9 @@ import '@/permission' // permission
 import permission from '@/directive/permission/index'
 Vue.use(permission)
 
+import plugins from './plugins' // plugins
+Vue.use(plugins)
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

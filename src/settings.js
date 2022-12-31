@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '马甲包后台管理系统',
+  title: 'xxx后台管理系统',
 
   /**
    * @type {boolean} true | false

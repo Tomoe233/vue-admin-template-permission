@@ -16,38 +16,29 @@ const users = {
     name: 'Super Admin',
     menus: [
       {
-        'path': '/ManagementAccount',
+        'path': '/System',
         'component': 'Layout',
+        'redirect': '/System/menu',
+        'name': 'System',
+        'meta': { title: '系统管理', icon: 'el-icon-setting' },
         'children': [
           {
-            'path': 'index',
-            'name': 'managementAccount',
-            'component': 'ManagementAccount/index',
-            'meta': { title: '账号管理', icon: 'el-icon-notebook-2' }
-          }
-        ]
-      },
-      {
-        path: '/ManageUsers',
-        component: 'Layout',
-        children: [
+            'path': 'menu',
+            'name': 'Menu',
+            'component': 'System/menu/index',
+            'meta': { title: '菜单管理' }
+          },
           {
-            path: 'index',
-            name: 'manageUsers',
-            component: 'ManageUsers/index',
-            meta: { title: '用户管理', icon: 'el-icon-user' }
-          }
-        ]
-      },
-      {
-        path: '/PushMessage',
-        component: 'Layout',
-        children: [
+            'path': 'role',
+            'name': 'Role',
+            'component': 'System/role/index',
+            'meta': { title: '角色管理' }
+          },
           {
-            path: 'index',
-            name: 'pushMessage',
-            component: 'PushMessage/index',
-            meta: { title: '消息推送', icon: 'el-icon-bell' }
+            'path': 'user',
+            'name': 'User',
+            'component': 'System/user/index',
+            'meta': { title: '用户管理' }
           }
         ]
       }

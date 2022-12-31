@@ -1,7 +1,8 @@
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
-      <router-view :key="key" />
+      <!-- <router-view :key="key" /> -->
+      <router-view :include="cachedViews" />
     </transition>
   </section>
 </template>
@@ -10,8 +11,11 @@
 export default {
   name: 'AppMain',
   computed: {
-    key() {
-      return this.$route.path
+    // key() {
+    //   return this.$route.path
+    // }
+    cachedViews() {
+      return this.$store.state.tagsView.cachedViews
     }
   }
 }
@@ -19,8 +23,9 @@ export default {
 
 <style scoped>
 .app-main {
-  /*50 = navbar  */
-  min-height: calc(100vh - 50px);
+  /* 50 = navbar  */
+  /* 34 = tagsView */
+  min-height: calc(100vh - 50px - 34px);
   width: 100%;
   position: relative;
   overflow: hidden;

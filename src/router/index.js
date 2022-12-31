@@ -46,12 +46,12 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/ReplaceLink',
+    redirect: '/dashboard',
     children: [{
-      path: 'ReplaceLink',
-      name: 'replaceLink',
-      component: () => import('@/views/ReplaceLink/index'),
-      meta: { title: '替换链接', icon: 'el-icon-link' }
+      path: 'dashboard',
+      name: 'dashboard',
+      component: () => import('@/views/dashboard/index'),
+      meta: { title: '首页', icon: 'el-icon-s-home' }
     }]
   },
 

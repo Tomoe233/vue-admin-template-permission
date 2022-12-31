@@ -70,7 +70,7 @@
           border
           stripe
           style="width: 100%"
-          :height="windowHeight - 50 - 40 - headerHeight - 10 - 40 - 32"
+          :height="windowHeight - 50 - 34 - 40 - headerHeight - 10 - 40 - 32"
         >
           <el-table-column
             type="index"
