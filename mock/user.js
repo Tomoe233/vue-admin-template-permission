@@ -12,7 +12,7 @@ const users = {
   'admin-token': {
     roles: ['admin'],
     introduction: 'I am a super administrator',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    avatar: 'http://inews.gtimg.com/newsapp_bt/0/13856645985/641',
     name: 'Super Admin',
     menus: [
       {
@@ -26,19 +26,19 @@ const users = {
             'path': 'menu',
             'name': 'Menu',
             'component': 'System/menu/index',
-            'meta': { title: '菜单管理' }
+            'meta': { title: '菜单管理', icon: 'el-icon-menu' }
           },
           {
             'path': 'role',
             'name': 'Role',
             'component': 'System/role/index',
-            'meta': { title: '角色管理' }
+            'meta': { title: '角色管理', icon: 'el-icon-s-custom' }
           },
           {
             'path': 'user',
             'name': 'User',
             'component': 'System/user/index',
-            'meta': { title: '用户管理' }
+            'meta': { title: '用户管理', icon: 'el-icon-user-solid' }
           }
         ]
       }
@@ -47,7 +47,7 @@ const users = {
   'editor-token': {
     roles: ['editor'],
     introduction: 'I am an editor',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    avatar: 'http://p4.itc.cn/images01/20200807/ac6e9d41a0bd42d0a02526c8d422ab16.jpeg',
     name: 'Normal Editor',
     menus: []
   }
