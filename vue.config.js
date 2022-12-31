@@ -36,7 +36,15 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    // before: require('./mock/mock-server.js')
+    proxy: {
+      '/dev-api': {
+        // logLevel: 'debug',
+        target: 'https://www.fastmock.site/mock/743d4e06af403aa899a9140a2e34d5d1/api', // 正式
+        changeOrigin: true,
+        pathRewrite: { '^/dev-api': '/dev-api' }
+      }
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

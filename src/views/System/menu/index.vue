@@ -28,6 +28,7 @@
       <el-main>
         <el-table
           v-if="menuTable"
+          v-loading="loading"
           :data="tableData"
           row-key="id"
           stripe
@@ -72,10 +73,102 @@
         />
       </el-main>
     </el-container>
+    <!-- 新增菜单弹窗 -->
+    <el-dialog
+      title="添加菜单"
+      :visible.sync="dialogVisible"
+      width="680px"
+      :before-close="handleClose"
+    >
+      <el-form ref="menuForm" v-model="menuForm" :rules="rules" label-width="100px">
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="上级菜单" prop="parentMenu">
+              <el-select v-model="menuForm.parentMenu" style="width: 100%;" placeholder="请选择活动区域">
+                <el-option label="区域一" value="shanghai" />
+                <el-option label="区域二" value="beijing" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="菜单类型" prop="menuType">
+              <el-radio-group v-model="menuForm.menuType">
+                <el-radio :label="'1'">目录</el-radio>
+                <el-radio :label="'2'">菜单</el-radio>
+                <el-radio :label="'3'">按钮</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="菜单图标" prop="icon">
+              <el-select v-model="menuForm.icon" style="width: 100%;" placeholder="请选择活动区域">
+                <el-option label="区域一" value="shanghai" />
+                <el-option label="区域二" value="beijing" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="菜单名称" prop="menuName">
+              <el-input v-model="menuForm.menuName" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="显示排序" prop="orderNum">
+              <el-input-number v-model="menuForm.orderNum" controls-position="right" :min="1" size="large" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="是否外链" prop="isFrame">
+              <el-radio-group v-model="menuForm.isFrame">
+                <el-radio :label="'1'">是</el-radio>
+                <el-radio :label="'2'">否</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="路由地址" prop="path">
+              <el-input v-model="menuForm.path" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="显示状态" prop="visible">
+              <el-radio-group v-model="menuForm.visible">
+                <el-radio :label="'1'">显示</el-radio>
+                <el-radio :label="'2'">隐藏</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="菜单状态" prop="status">
+              <el-radio-group v-model="menuForm.status">
+                <el-radio :label="'1'">正常</el-radio>
+                <el-radio :label="'2'">停用</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { getList } from '@/api/menu'
+
 export default {
   data() {
     return {
@@ -88,165 +181,183 @@ export default {
       defaultExpandAll: false, // 表格是否全部展开
       isShowSearchText: '隐藏搜索', // 隐藏搜索框按钮提示文字
       // 表格数据
-      tableData: [{
-        id: 1,
-        menuName: 'Example',
-        icon: 'el-icon-s-home',
-        sort: '1',
-        permissionID: '',
-        componentPath: '',
-        state: '1',
-        creationTime: '2022-12-31 17:24:51',
-        children: [{
-          id: 11,
-          menuName: 'Table',
-          icon: 'el-icon-s-order',
-          sort: '1',
-          permissionID: 'example:table:list',
-          componentPath: 'table/index',
-          state: '1',
-          creationTime: '2022-12-31 17:24:51'
-        }, {
-          id: 12,
-          menuName: 'Tree',
-          icon: 'el-icon-s-management',
-          sort: '2',
-          permissionID: 'example:tree:list',
-          componentPath: 'tree/index',
-          state: '1',
-          creationTime: '2022-12-31 17:24:51'
-        }]
-      }, {
-        id: 2,
-        menuName: 'Form',
-        icon: 'el-icon-tickets',
-        sort: '2',
-        permissionID: '',
-        componentPath: 'form/index',
-        state: '1',
-        creationTime: '2022-12-31 17:24:51'
-      }, {
-        id: 3,
-        menuName: 'Nested',
-        icon: 'el-icon-s-operation',
-        sort: '3',
-        permissionID: '',
-        componentPath: '',
-        state: '1',
-        creationTime: '2022-12-31 17:24:51',
-        children: [{
-          id: 31,
-          menuName: 'Menu1',
-          icon: '',
-          sort: '1',
-          permissionID: '',
-          componentPath: 'nested/menu1/index',
-          state: '1',
-          creationTime: '2022-12-31 17:24:51',
-          children: [{
-            id: 311,
-            menuName: 'Menu1-1',
-            icon: '',
-            sort: '1',
-            permissionID: '',
-            componentPath: 'nested/menu1/menu1-1',
-            state: '1',
-            creationTime: '2022-12-31 17:24:51'
-          }, {
-            id: 312,
-            menuName: 'Menu1-2',
-            icon: '',
-            sort: '2',
-            permissionID: '',
-            componentPath: 'nested/menu1/menu1-2',
-            state: '1',
-            creationTime: '2022-12-31 17:24:51',
-            children: [{
-              id: 3121,
-              menuName: 'Menu1-2-1',
-              icon: '',
-              sort: '1',
-              permissionID: '',
-              componentPath: 'nested/menu1/menu1-2/menu1-2-1',
-              state: '1',
-              creationTime: '2022-12-31 17:24:51'
-            }, {
-              id: 3122,
-              menuName: 'Menu1-2-2',
-              icon: '',
-              sort: '2',
-              permissionID: '',
-              componentPath: 'nested/menu1/menu1-2/menu1-2-1',
-              state: '1',
-              creationTime: '2022-12-31 17:24:51'
-            }]
-          }, {
-            id: 313,
-            menuName: 'Menu1-3',
-            icon: '',
-            sort: '3',
-            permissionID: '',
-            componentPath: 'nested/menu1/menu1-3',
-            state: '1',
-            creationTime: '2022-12-31 17:24:51'
-          }]
-        }, {
-          id: 32,
-          menuName: 'Menu2',
-          icon: '',
-          sort: '2',
-          permissionID: '',
-          componentPath: 'nested/menu2/index',
-          state: '1',
-          creationTime: '2022-12-31 17:24:51'
-        }]
-      }, {
-        id: 4,
-        menuName: 'External Link',
-        icon: 'el-icon-share',
-        sort: '4',
-        permissionID: '',
-        componentPath: 'https://www.mhoneyl.com',
-        state: '2',
-        creationTime: '2022-12-31 17:24:51'
-      }, {
-        id: 5,
-        menuName: '系统管理',
-        icon: 'el-icon-setting',
-        sort: '5',
-        permissionID: '',
-        componentPath: '',
-        state: '1',
-        creationTime: '2022-12-31 17:24:51',
-        children: [{
-          id: 51,
-          menuName: '菜单管理',
-          icon: 'el-icon-menu',
-          sort: '1',
-          permissionID: 'system:menu:list',
-          componentPath: 'System/menu/index',
-          state: '1',
-          creationTime: '2022-12-31 17:24:51'
-        }, {
-          id: 52,
-          menuName: '角色管理',
-          icon: 'el-icon-s-custom',
-          sort: '2',
-          permissionID: 'system:role:list',
-          componentPath: 'System/role/index',
-          state: '1',
-          creationTime: '2022-12-31 17:24:51'
-        }, {
-          id: 53,
-          menuName: '用户管理',
-          icon: 'el-icon-user-solid',
-          sort: '2',
-          permissionID: 'system:user:list',
-          componentPath: 'System/user/index',
-          state: '1',
-          creationTime: '2022-12-31 17:24:51'
-        }]
-      }]
+      // tableData: [{
+      //   id: 1,
+      //   menuName: 'Example',
+      //   icon: 'el-icon-s-home',
+      //   sort: '1',
+      //   permissionID: '',
+      //   componentPath: '',
+      //   state: '1',
+      //   creationTime: '2022-12-31 17:24:51',
+      //   children: [{
+      //     id: 11,
+      //     menuName: 'Table',
+      //     icon: 'el-icon-s-order',
+      //     sort: '1',
+      //     permissionID: 'example:table:list',
+      //     componentPath: 'table/index',
+      //     state: '1',
+      //     creationTime: '2022-12-31 17:24:51'
+      //   }, {
+      //     id: 12,
+      //     menuName: 'Tree',
+      //     icon: 'el-icon-s-management',
+      //     sort: '2',
+      //     permissionID: 'example:tree:list',
+      //     componentPath: 'tree/index',
+      //     state: '1',
+      //     creationTime: '2022-12-31 17:24:51'
+      //   }]
+      // }, {
+      //   id: 2,
+      //   menuName: 'Form',
+      //   icon: 'el-icon-tickets',
+      //   sort: '2',
+      //   permissionID: '',
+      //   componentPath: 'form/index',
+      //   state: '1',
+      //   creationTime: '2022-12-31 17:24:51'
+      // }, {
+      //   id: 3,
+      //   menuName: 'Nested',
+      //   icon: 'el-icon-s-operation',
+      //   sort: '3',
+      //   permissionID: '',
+      //   componentPath: '',
+      //   state: '1',
+      //   creationTime: '2022-12-31 17:24:51',
+      //   children: [{
+      //     id: 31,
+      //     menuName: 'Menu1',
+      //     icon: '',
+      //     sort: '1',
+      //     permissionID: '',
+      //     componentPath: 'nested/menu1/index',
+      //     state: '1',
+      //     creationTime: '2022-12-31 17:24:51',
+      //     children: [{
+      //       id: 311,
+      //       menuName: 'Menu1-1',
+      //       icon: '',
+      //       sort: '1',
+      //       permissionID: '',
+      //       componentPath: 'nested/menu1/menu1-1',
+      //       state: '1',
+      //       creationTime: '2022-12-31 17:24:51'
+      //     }, {
+      //       id: 312,
+      //       menuName: 'Menu1-2',
+      //       icon: '',
+      //       sort: '2',
+      //       permissionID: '',
+      //       componentPath: 'nested/menu1/menu1-2',
+      //       state: '1',
+      //       creationTime: '2022-12-31 17:24:51',
+      //       children: [{
+      //         id: 3121,
+      //         menuName: 'Menu1-2-1',
+      //         icon: '',
+      //         sort: '1',
+      //         permissionID: '',
+      //         componentPath: 'nested/menu1/menu1-2/menu1-2-1',
+      //         state: '1',
+      //         creationTime: '2022-12-31 17:24:51'
+      //       }, {
+      //         id: 3122,
+      //         menuName: 'Menu1-2-2',
+      //         icon: '',
+      //         sort: '2',
+      //         permissionID: '',
+      //         componentPath: 'nested/menu1/menu1-2/menu1-2-1',
+      //         state: '1',
+      //         creationTime: '2022-12-31 17:24:51'
+      //       }]
+      //     }, {
+      //       id: 313,
+      //       menuName: 'Menu1-3',
+      //       icon: '',
+      //       sort: '3',
+      //       permissionID: '',
+      //       componentPath: 'nested/menu1/menu1-3',
+      //       state: '1',
+      //       creationTime: '2022-12-31 17:24:51'
+      //     }]
+      //   }, {
+      //     id: 32,
+      //     menuName: 'Menu2',
+      //     icon: '',
+      //     sort: '2',
+      //     permissionID: '',
+      //     componentPath: 'nested/menu2/index',
+      //     state: '1',
+      //     creationTime: '2022-12-31 17:24:51'
+      //   }]
+      // }, {
+      //   id: 4,
+      //   menuName: 'External Link',
+      //   icon: 'el-icon-share',
+      //   sort: '4',
+      //   permissionID: '',
+      //   componentPath: 'https://www.mhoneyl.com',
+      //   state: '2',
+      //   creationTime: '2022-12-31 17:24:51'
+      // }, {
+      //   id: 5,
+      //   menuName: '系统管理',
+      //   icon: 'el-icon-setting',
+      //   sort: '5',
+      //   permissionID: '',
+      //   componentPath: '',
+      //   state: '1',
+      //   creationTime: '2022-12-31 17:24:51',
+      //   children: [{
+      //     id: 51,
+      //     menuName: '菜单管理',
+      //     icon: 'el-icon-menu',
+      //     sort: '1',
+      //     permissionID: 'system:menu:list',
+      //     componentPath: 'System/menu/index',
+      //     state: '1',
+      //     creationTime: '2022-12-31 17:24:51'
+      //   }, {
+      //     id: 52,
+      //     menuName: '角色管理',
+      //     icon: 'el-icon-s-custom',
+      //     sort: '2',
+      //     permissionID: 'system:role:list',
+      //     componentPath: 'System/role/index',
+      //     state: '1',
+      //     creationTime: '2022-12-31 17:24:51'
+      //   }, {
+      //     id: 53,
+      //     menuName: '用户管理',
+      //     icon: 'el-icon-user-solid',
+      //     sort: '2',
+      //     permissionID: 'system:user:list',
+      //     componentPath: 'System/user/index',
+      //     state: '1',
+      //     creationTime: '2022-12-31 17:24:51'
+      //   }]
+      // }]
+      tableData: [],
+      dialogVisible: false, // 添加菜单弹窗
+      menuForm: { // 添加菜单表单数据
+        component: '',
+        icon: '',
+        isCache: '1',
+        isFrame: '2',
+        menuName: '',
+        menuType: '1',
+        orderNum: '1',
+        parentId: '2',
+        path: '',
+        perms: '11',
+        query: '11',
+        status: '1',
+        visible: '1'
+      },
+      rules: {}
     }
   },
   watch: {
@@ -279,6 +390,10 @@ export default {
       })()
     }
   },
+  created() {
+    const that = this
+    that.getListData()
+  },
   methods: {
     // 计算表格高度
     CalculationHeight() {
@@ -292,7 +407,10 @@ export default {
     getListData() {
       const that = this
       that.loading = true
-      // todo...
+      getList().then(res => {
+        that.tableData = res.data
+        that.loading = false
+      })
     },
     // 搜索菜单名
     search() {
@@ -306,7 +424,15 @@ export default {
     },
     // 新增菜单
     addMenu() {
-
+      const that = this
+      that.dialogVisible = true
+    },
+    // 关闭新增菜单弹窗
+    handleClose() {
+      const that = this
+      that.dialogVisible = false
+      // 清除表单内容
+      console.log('close')
     },
     // 是否展开表格数据
     isOpen() {
@@ -345,6 +471,15 @@ export default {
   height: 30px;
   line-height: 30px;
 }
+
+// ::v-deep .el-input-number.is-controls-right .el-input-number__decrease, .el-input-number.is-controls-right .el-input-number__increase {
+//   height: 16px;
+//   line-height: 16px;
+// }
+
+// ::v-deep .el-input-number__decrease, .el-input-number__increase {
+//   top: 4px !important;
+// }
 
 .search {
   display: flex;
