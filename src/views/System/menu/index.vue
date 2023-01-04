@@ -74,102 +74,16 @@
       </el-main>
     </el-container>
     <!-- 新增菜单弹窗 -->
-    <el-dialog
-      title="添加菜单"
-      :visible.sync="dialogVisible"
-      width="680px"
-      :before-close="handleClose"
-    >
-      <el-form ref="menuForm" v-model="menuForm" :rules="rules" label-width="100px">
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="上级菜单" prop="parentMenu">
-              <el-select v-model="menuForm.parentMenu" style="width: 100%;" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai" />
-                <el-option label="区域二" value="beijing" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="菜单类型" prop="menuType">
-              <el-radio-group v-model="menuForm.menuType">
-                <el-radio :label="'1'">目录</el-radio>
-                <el-radio :label="'2'">菜单</el-radio>
-                <el-radio :label="'3'">按钮</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="菜单图标" prop="icon">
-              <el-select v-model="menuForm.icon" style="width: 100%;" placeholder="请选择活动区域">
-                <el-option label="区域一" value="shanghai" />
-                <el-option label="区域二" value="beijing" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="菜单名称" prop="menuName">
-              <el-input v-model="menuForm.menuName" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="显示排序" prop="orderNum">
-              <el-input-number v-model="menuForm.orderNum" controls-position="right" :min="1" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="是否外链" prop="isFrame">
-              <el-radio-group v-model="menuForm.isFrame">
-                <el-radio :label="'1'">是</el-radio>
-                <el-radio :label="'2'">否</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="路由地址" prop="path">
-              <el-input v-model="menuForm.path" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="显示状态" prop="visible">
-              <el-radio-group v-model="menuForm.visible">
-                <el-radio :label="'1'">显示</el-radio>
-                <el-radio :label="'2'">隐藏</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="菜单状态" prop="status">
-              <el-radio-group v-model="menuForm.status">
-                <el-radio :label="'1'">正常</el-radio>
-                <el-radio :label="'2'">停用</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
+    <add-menu :type="dialogType" :add-menu-dialog.sync="addMenuDialog" />
   </div>
 </template>
 
 <script>
 import { getList } from '@/api/menu'
+import addMenu from './components/addMenu'
 
 export default {
+  components: { addMenu },
   data() {
     return {
       headerHeight: '', // 实时header高度
@@ -341,23 +255,8 @@ export default {
       //   }]
       // }]
       tableData: [],
-      dialogVisible: false, // 添加菜单弹窗
-      menuForm: { // 添加菜单表单数据
-        component: '',
-        icon: '',
-        isCache: '1',
-        isFrame: '2',
-        menuName: '',
-        menuType: '1',
-        orderNum: '1',
-        parentId: '2',
-        path: '',
-        perms: '11',
-        query: '11',
-        status: '1',
-        visible: '1'
-      },
-      rules: {}
+      dialogType: '', // 判断新增菜单还是子菜单
+      addMenuDialog: false // 添加菜单弹窗
     }
   },
   watch: {
@@ -425,14 +324,8 @@ export default {
     // 新增菜单
     addMenu() {
       const that = this
-      that.dialogVisible = true
-    },
-    // 关闭新增菜单弹窗
-    handleClose() {
-      const that = this
-      that.dialogVisible = false
-      // 清除表单内容
-      console.log('close')
+      that.dialogType
+      that.addMenuDialog = true
     },
     // 是否展开表格数据
     isOpen() {
@@ -449,6 +342,25 @@ export default {
     refresh() {
       const that = this
       that.getListData()
+    },
+    // 删除菜单项
+    deleteMenu(val) {
+      const that = this
+      that.$confirm(`确定要删除名为“${val.menuName}”的数据项?`, '系统提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        that.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        that.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     // 变更页码大小
     handleSizeChange(val) {
