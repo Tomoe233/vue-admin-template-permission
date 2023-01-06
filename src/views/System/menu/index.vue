@@ -14,7 +14,7 @@
             </div>
           </div>
           <div class="buttons">
-            <el-button type="primary" icon="el-icon-plus" size="mini" plain @click="addMenu">新增</el-button>
+            <el-button type="primary" icon="el-icon-plus" size="mini" plain @click="addMenu('新增菜单')">新增</el-button>
             <el-button type="info" icon="el-icon-sort" size="mini" plain @click="isOpen">展开/折叠</el-button>
             <el-tooltip class="item" effect="dark" content="刷新" placement="top">
               <el-button icon="el-icon-refresh" size="mini" circle @click="refresh" />
@@ -55,8 +55,8 @@
           <el-table-column prop="creationTime" label="创建时间" min-width="150" align="center" />
           <el-table-column label="操作" min-width="170" align="center">
             <template slot-scope="scope">
-              <el-button type="text" size="mini" icon="el-icon-edit" @click="editMenu(scope.row)">修改</el-button>
-              <el-button type="text" size="mini" icon="el-icon-plus" @click="addMenu(scope.row)">新增</el-button>
+              <el-button type="text" size="mini" icon="el-icon-edit" @click="addMenu('修改菜单', scope.row)">修改</el-button>
+              <el-button type="text" size="mini" icon="el-icon-plus" @click="addMenu('新增菜单', scope.row)">新增</el-button>
               <el-button type="text" size="mini" icon="el-icon-delete" @click="deleteMenu(scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -74,7 +74,7 @@
       </el-main>
     </el-container>
     <!-- 新增菜单弹窗 -->
-    <add-menu :type="dialogType" :add-menu-dialog.sync="addMenuDialog" />
+    <add-menu :title="addMenuDialogTitle" :value="addMenuDialogValue" :add-menu-dialog.sync="addMenuDialog" />
   </div>
 </template>
 
@@ -255,7 +255,8 @@ export default {
       //   }]
       // }]
       tableData: [],
-      dialogType: '', // 判断新增菜单还是子菜单
+      addMenuDialogTitle: '', // 新增菜单弹窗标题
+      addMenuDialogValue: {}, // 菜单弹窗数据
       addMenuDialog: false // 添加菜单弹窗
     }
   },
@@ -321,10 +322,12 @@ export default {
       that.menuValue = ''
       that.getListData()
     },
-    // 新增菜单
-    addMenu() {
+    // 新增&修改菜单
+    addMenu(title, val) {
+      console.log(title, val)
       const that = this
-      that.dialogType
+      that.addMenuDialogTitle = title
+      that.addMenuDialogValue = val === undefined ? {} : val
       that.addMenuDialog = true
     },
     // 是否展开表格数据
