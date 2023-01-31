@@ -28,6 +28,7 @@
       <el-main>
         <el-table
           v-if="menuTable"
+          ref="table"
           v-loading="loading"
           :data="tableData"
           row-key="id"
@@ -35,7 +36,7 @@
           :default-expand-all="defaultExpandAll"
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
           :header-cell-style="{ width: '100%', background: '#f8f8f9', color: '#515a6e' }"
-          :height="windowHeight - 50 - 34 - 40 - headerHeight - 10 - 40 - 32"
+          :height="windowHeight - 50 - 34 - 40 - headerHeight - 1 - 40 - 10 - 32"
         >
           <el-table-column prop="menuName" label="菜单名称" min-width="200" />
           <el-table-column prop="icon" label="图标" width="80" align="center">
@@ -94,167 +95,7 @@ export default {
       menuTable: true, // 控制重新渲染表格
       defaultExpandAll: false, // 表格是否全部展开
       isShowSearchText: '隐藏搜索', // 隐藏搜索框按钮提示文字
-      // 表格数据
-      // tableData: [{
-      //   id: 1,
-      //   menuName: 'Example',
-      //   icon: 'el-icon-s-home',
-      //   sort: '1',
-      //   permissionID: '',
-      //   componentPath: '',
-      //   state: '1',
-      //   creationTime: '2022-12-31 17:24:51',
-      //   children: [{
-      //     id: 11,
-      //     menuName: 'Table',
-      //     icon: 'el-icon-s-order',
-      //     sort: '1',
-      //     permissionID: 'example:table:list',
-      //     componentPath: 'table/index',
-      //     state: '1',
-      //     creationTime: '2022-12-31 17:24:51'
-      //   }, {
-      //     id: 12,
-      //     menuName: 'Tree',
-      //     icon: 'el-icon-s-management',
-      //     sort: '2',
-      //     permissionID: 'example:tree:list',
-      //     componentPath: 'tree/index',
-      //     state: '1',
-      //     creationTime: '2022-12-31 17:24:51'
-      //   }]
-      // }, {
-      //   id: 2,
-      //   menuName: 'Form',
-      //   icon: 'el-icon-tickets',
-      //   sort: '2',
-      //   permissionID: '',
-      //   componentPath: 'form/index',
-      //   state: '1',
-      //   creationTime: '2022-12-31 17:24:51'
-      // }, {
-      //   id: 3,
-      //   menuName: 'Nested',
-      //   icon: 'el-icon-s-operation',
-      //   sort: '3',
-      //   permissionID: '',
-      //   componentPath: '',
-      //   state: '1',
-      //   creationTime: '2022-12-31 17:24:51',
-      //   children: [{
-      //     id: 31,
-      //     menuName: 'Menu1',
-      //     icon: '',
-      //     sort: '1',
-      //     permissionID: '',
-      //     componentPath: 'nested/menu1/index',
-      //     state: '1',
-      //     creationTime: '2022-12-31 17:24:51',
-      //     children: [{
-      //       id: 311,
-      //       menuName: 'Menu1-1',
-      //       icon: '',
-      //       sort: '1',
-      //       permissionID: '',
-      //       componentPath: 'nested/menu1/menu1-1',
-      //       state: '1',
-      //       creationTime: '2022-12-31 17:24:51'
-      //     }, {
-      //       id: 312,
-      //       menuName: 'Menu1-2',
-      //       icon: '',
-      //       sort: '2',
-      //       permissionID: '',
-      //       componentPath: 'nested/menu1/menu1-2',
-      //       state: '1',
-      //       creationTime: '2022-12-31 17:24:51',
-      //       children: [{
-      //         id: 3121,
-      //         menuName: 'Menu1-2-1',
-      //         icon: '',
-      //         sort: '1',
-      //         permissionID: '',
-      //         componentPath: 'nested/menu1/menu1-2/menu1-2-1',
-      //         state: '1',
-      //         creationTime: '2022-12-31 17:24:51'
-      //       }, {
-      //         id: 3122,
-      //         menuName: 'Menu1-2-2',
-      //         icon: '',
-      //         sort: '2',
-      //         permissionID: '',
-      //         componentPath: 'nested/menu1/menu1-2/menu1-2-1',
-      //         state: '1',
-      //         creationTime: '2022-12-31 17:24:51'
-      //       }]
-      //     }, {
-      //       id: 313,
-      //       menuName: 'Menu1-3',
-      //       icon: '',
-      //       sort: '3',
-      //       permissionID: '',
-      //       componentPath: 'nested/menu1/menu1-3',
-      //       state: '1',
-      //       creationTime: '2022-12-31 17:24:51'
-      //     }]
-      //   }, {
-      //     id: 32,
-      //     menuName: 'Menu2',
-      //     icon: '',
-      //     sort: '2',
-      //     permissionID: '',
-      //     componentPath: 'nested/menu2/index',
-      //     state: '1',
-      //     creationTime: '2022-12-31 17:24:51'
-      //   }]
-      // }, {
-      //   id: 4,
-      //   menuName: 'External Link',
-      //   icon: 'el-icon-share',
-      //   sort: '4',
-      //   permissionID: '',
-      //   componentPath: 'https://www.mhoneyl.com',
-      //   state: '2',
-      //   creationTime: '2022-12-31 17:24:51'
-      // }, {
-      //   id: 5,
-      //   menuName: '系统管理',
-      //   icon: 'el-icon-setting',
-      //   sort: '5',
-      //   permissionID: '',
-      //   componentPath: '',
-      //   state: '1',
-      //   creationTime: '2022-12-31 17:24:51',
-      //   children: [{
-      //     id: 51,
-      //     menuName: '菜单管理',
-      //     icon: 'el-icon-menu',
-      //     sort: '1',
-      //     permissionID: 'system:menu:list',
-      //     componentPath: 'System/menu/index',
-      //     state: '1',
-      //     creationTime: '2022-12-31 17:24:51'
-      //   }, {
-      //     id: 52,
-      //     menuName: '角色管理',
-      //     icon: 'el-icon-s-custom',
-      //     sort: '2',
-      //     permissionID: 'system:role:list',
-      //     componentPath: 'System/role/index',
-      //     state: '1',
-      //     creationTime: '2022-12-31 17:24:51'
-      //   }, {
-      //     id: 53,
-      //     menuName: '用户管理',
-      //     icon: 'el-icon-user-solid',
-      //     sort: '2',
-      //     permissionID: 'system:user:list',
-      //     componentPath: 'System/user/index',
-      //     state: '1',
-      //     creationTime: '2022-12-31 17:24:51'
-      //   }]
-      // }]
-      tableData: [],
+      tableData: [], // 表格数据
       addMenuDialogTitle: '', // 新增菜单弹窗标题
       addMenuDialogValue: {}, // 菜单弹窗数据
       addMenuDialog: false // 添加菜单弹窗
@@ -298,10 +139,12 @@ export default {
     // 计算表格高度
     CalculationHeight() {
       const that = this
-      window.fullHeight = document.documentElement.clientHeight
-      const headerHeight = that.$refs.header.offsetHeight
-      that.windowHeight = window.fullHeight // 屏幕高度
-      that.headerHeight = headerHeight // header高度
+      that.$nextTick(() => {
+        window.fullHeight = document.documentElement.clientHeight
+        const headerHeight = that.$refs.header.offsetHeight
+        that.windowHeight = window.fullHeight // 屏幕高度
+        that.headerHeight = headerHeight // header高度
+      })
     },
     // 获取表格数据
     getListData() {
@@ -340,6 +183,7 @@ export default {
       const that = this
       that.isShowsearch = !that.isShowsearch
       that.isShowSearchText = that.isShowsearch ? '显示搜索' : '隐藏搜索'
+      that.CalculationHeight()
     },
     // 刷新表格
     refresh() {

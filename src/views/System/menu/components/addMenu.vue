@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div>
     <el-dialog
       :title="Title"
       :visible.sync="addMenuDialog"
