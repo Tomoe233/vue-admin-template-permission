@@ -6,7 +6,18 @@
           <div class="search" :class="isShowsearch ? 'isShow' : ''">
             <div class="searchInput">
               <div class="label">菜单名称：</div>
-              <el-input v-model="menuValue" placeholder="请输入菜单名称" />
+              <el-input v-model="menuValue" size="small" placeholder="请输入菜单名称" />
+            </div>
+            <div class="searchInput">
+              <div class="labelState">状态：</div>
+              <el-select v-model="state" size="small" placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
             </div>
             <div class="searchButton">
               <el-button type="primary" icon="el-icon-search" size="mini" @click="search">搜索</el-button>
@@ -92,6 +103,14 @@ export default {
       loading: false,
       isShowsearch: false, // 是否展示搜索栏
       menuValue: '', // 搜索框值
+      state: '', // 状态值
+      options: [{
+        value: '1',
+        label: '正常'
+      }, {
+        value: '2',
+        label: '停用'
+      }],
       menuTable: true, // 控制重新渲染表格
       defaultExpandAll: false, // 表格是否全部展开
       isShowSearchText: '隐藏搜索', // 隐藏搜索框按钮提示文字
@@ -236,6 +255,14 @@ export default {
     .label {
       margin: auto;
       width: 110px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #606266;
+    }
+
+    .labelState {
+      margin: auto 0 auto 10px;
+      width: 50px;
       font-size: 14px;
       font-weight: 700;
       color: #606266;
