@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import { getList } from '@/api/menu'
+import { getMenuList } from '@/api/system'
 import addMenu from './components/addMenu'
 
 export default {
@@ -169,7 +169,7 @@ export default {
     getListData() {
       const that = this
       that.loading = true
-      getList().then(res => {
+      getMenuList().then(res => {
         that.tableData = res.data
         that.loading = false
       })

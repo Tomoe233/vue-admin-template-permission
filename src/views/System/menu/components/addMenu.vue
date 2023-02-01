@@ -96,7 +96,7 @@
   </div>
 </template>
 <script>
-import { getMenuTree } from '@/api/menu'
+import { getMenuTree } from '@/api/system'
 
 export default {
   name: 'AddMenu',
