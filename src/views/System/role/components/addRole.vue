@@ -90,7 +90,6 @@ export default {
     handleClose() {
       const that = this
       that.$refs.roleForm.resetFields()
-      that.$emit('update:value', {})
       that.$emit('update:addRoleDialog', false)
     }
   }

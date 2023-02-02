@@ -41,9 +41,10 @@
           </div>
           <div class="buttons">
             <el-button type="primary" icon="el-icon-plus" size="mini" plain @click="addRole('新增角色', {})">新增</el-button>
-            <el-button type="success" icon="el-icon-edit" size="mini" plain @click="addRole('修改角色')">修改</el-button>
-            <el-button type="danger" icon="el-icon-delete" size="mini" plain @click="deleteRole">删除</el-button>
-            <el-button type="warning" icon="el-icon-download" size="mini" plain @click="downloadRole">导出</el-button>
+            <el-button type="success" icon="el-icon-edit" size="mini" plain :disabled="editButton" @click="addRole('修改角色', selectData[0])">修改</el-button>
+            <el-button type="danger" icon="el-icon-delete" size="mini" plain :disabled="deleteButtom" @click="deleteRole(selectData)">删除</el-button>
+            <!-- <el-button type="warning" icon="el-icon-download" size="mini" plain @click="downloadRole">导出</el-button> -->
+            <exportExcel :id="'roleTable'" :name="'角色数据'" />
             <el-tooltip class="item" effect="dark" content="刷新" placement="top">
               <el-button icon="el-icon-refresh" size="mini" circle @click="refresh" />
             </el-tooltip>
@@ -55,6 +56,7 @@
       </el-header>
       <el-main>
         <el-table
+          id="roleTable"
           ref="table"
           v-loading="loading"
           :data="tableData"
@@ -64,7 +66,7 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55" align="center" />
-          <el-table-column type="index" width="120" label="角色编号" align="center" />
+          <el-table-column prop="roleID" width="120" label="角色编号" align="center" />
           <el-table-column prop="roleName" label="角色名称" min-width="200" />
           <el-table-column prop="roleKey" label="权限字符" min-width="120" />
           <el-table-column prop="roleSort" label="显示顺序" min-width="120" align="center" />
@@ -94,23 +96,27 @@
         />
       </el-main>
     </el-container>
-    <!-- 新增菜单弹窗 -->
+    <!-- 新增角色弹窗 -->
     <add-role :title="addRoleDialogTitle" :value.sync="addRoleDialogValue" :add-role-dialog.sync="addRoleDialog" />
   </div>
 </template>
 
 <script>
 import { getRoleList } from '@/api/system'
+import ExportExcel from '@/components/ExportExcel/index.vue'
 import addRole from './components/addRole'
 
 export default {
-  components: { addRole },
+  components: { ExportExcel, addRole },
   data() {
     return {
       headerHeight: '', // 实时header高度
       windowHeight: document.documentElement.clientHeight, // 实时屏幕高度
       loading: false,
+      editButton: true, // 控制修改按钮是否禁用
+      deleteButtom: true, // 控制删除按钮是否禁用
       isShowsearch: false, // 是否展示搜索栏
+      isShowSearchText: '隐藏搜索', // 隐藏搜索框按钮提示文字
       roleName: '', // 搜索框角色名称值
       roleKey: '', // 搜索框权限字符值
       state: '', // 搜索框状态值
@@ -124,8 +130,9 @@ export default {
         label: '停用'
       }],
       roleTable: true, // 控制重新渲染表格
-      isShowSearchText: '隐藏搜索', // 隐藏搜索框按钮提示文字
       tableData: [], // 表格数据
+      selectData: '', // 选中表格数据
+      deleteDataList: [], // 选中删除数据列表
       addRoleDialogTitle: '', // 新增角色弹窗标题
       addRoleDialogValue: {}, // 角色弹窗数据
       addRoleDialog: false // 添加角色弹窗
@@ -139,6 +146,25 @@ export default {
     headerHeight(val) {
       const that = this
       console.log('实时header高度：', val, that.headerHeight)
+    },
+    selectData(val) {
+      const that = this
+      switch (val.length) {
+        case 0:
+          that.editButton = true
+          that.deleteButtom = true
+          break
+        case 1:
+          that.editButton = false
+          that.deleteButtom = false
+          break
+        case 2:
+          that.editButton = true
+          that.deleteButtom = false
+          break
+        default:
+          break
+      }
     }
   },
   mounted() {
@@ -213,12 +239,20 @@ export default {
     },
     // 表格选中数据
     handleSelectionChange(val) {
-      console.log(val)
+      const that = this
+      that.selectData = val
     },
     // 删除菜单项
     deleteRole(val) {
       const that = this
-      that.$confirm(`确定要删除角色名为“${val.roleName}”的数据项?`, '系统提示', {
+      if (val instanceof Array) {
+        val.map((item, index) => {
+          that.deleteDataList = val.length - 1 !== index ? that.deleteDataList + item.roleID + ',' : that.deleteDataList + item.roleID
+        })
+      } else {
+        that.deleteDataList = val.roleID
+      }
+      that.$confirm(`确定要删除角色编号为“${that.deleteDataList}”的数据项?`, '系统提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -234,10 +268,7 @@ export default {
           message: '已取消删除'
         })
       })
-    },
-    // 导出表格
-    downloadRole() {
-
+      that.deleteDataList = ''
     },
     // 变更页码大小
     handleSizeChange(val) {
