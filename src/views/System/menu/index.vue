@@ -182,6 +182,7 @@ export default {
     reset() {
       const that = this
       that.menuValue = ''
+      that.state = ''
       that.getListData()
     },
     // 新增&修改菜单
