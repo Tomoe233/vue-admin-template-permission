@@ -62,7 +62,7 @@
           :data="tableData"
           stripe
           :header-cell-style="{ width: '100%', background: '#f8f8f9', color: '#515a6e' }"
-          :height="windowHeight - 50 - 34 - 40 - headerHeight - 1 - 40 - 10 - 32"
+          :height="windowHeight - 50 - 34 - 40 - headerHeight - 2 - 40 - paginationHeight"
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55" align="center" />
@@ -86,11 +86,13 @@
         </el-table>
         <el-pagination
           class="marginTop textAlign"
-          :current-page="1"
-          :page-sizes="[100, 200, 300, 400]"
-          :page-size="100"
+          background
+          :current-page="page"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400"
+          :total="total"
+          :hide-on-single-page="hidePage"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
         />
@@ -112,6 +114,7 @@ export default {
     return {
       headerHeight: '', // 实时header高度
       windowHeight: document.documentElement.clientHeight, // 实时屏幕高度
+      paginationHeight: '',
       loading: false,
       editButton: true, // 控制修改按钮是否禁用
       deleteButtom: true, // 控制删除按钮是否禁用
@@ -131,6 +134,10 @@ export default {
       }],
       roleTable: true, // 控制重新渲染表格
       tableData: [], // 表格数据
+      total: 0, // 数据条数
+      pageSize: 20, // 页码大小
+      page: 1, // 当前页码
+      hidePage: '', // 页数小于1时隐藏分页
       selectData: '', // 选中表格数据
       deleteDataList: [], // 选中删除数据列表
       addRoleDialogTitle: '', // 新增角色弹窗标题
@@ -200,7 +207,10 @@ export default {
       const that = this
       that.loading = true
       getRoleList().then(res => {
+        that.total = res.total
         that.tableData = res.data
+        that.hidePage = !(that.total > 20)
+        that.paginationHeight = that.hidePage ? 0 : 42
         that.loading = false
       })
     },
@@ -339,7 +349,7 @@ export default {
 }
 
 .textAlign {
-  text-align: center;
+  text-align: end;
 }
 
 .isShow {

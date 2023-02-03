@@ -47,7 +47,7 @@
           :default-expand-all="defaultExpandAll"
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
           :header-cell-style="{ width: '100%', background: '#f8f8f9', color: '#515a6e' }"
-          :height="windowHeight - 50 - 34 - 40 - headerHeight - 1 - 40 - 10 - 32"
+          :height="windowHeight - 50 - 34 - 40 - headerHeight - 2 - 40 - paginationHeight"
         >
           <el-table-column prop="menuName" label="菜单名称" min-width="200" />
           <el-table-column prop="icon" label="图标" width="80" align="center">
@@ -75,11 +75,13 @@
         </el-table>
         <el-pagination
           class="marginTop textAlign"
-          :current-page="1"
-          :page-sizes="[100, 200, 300, 400]"
-          :page-size="100"
+          background
+          :current-page="page"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="400"
+          :total="total"
+          :hide-on-single-page="hidePage"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
         />
@@ -100,6 +102,7 @@ export default {
     return {
       headerHeight: '', // 实时header高度
       windowHeight: document.documentElement.clientHeight, // 实时屏幕高度
+      paginationHeight: '',
       loading: false,
       isShowsearch: false, // 是否展示搜索栏
       menuValue: '', // 搜索框值
@@ -115,6 +118,10 @@ export default {
       defaultExpandAll: false, // 表格是否全部展开
       isShowSearchText: '隐藏搜索', // 隐藏搜索框按钮提示文字
       tableData: [], // 表格数据
+      total: 0, // 数据条数
+      pageSize: 20, // 页码大小
+      page: 1, // 当前页码
+      hidePage: '', // 页数小于1时隐藏分页
       addMenuDialogTitle: '', // 新增菜单弹窗标题
       addMenuDialogValue: {}, // 菜单弹窗数据
       addMenuDialog: false // 添加菜单弹窗
@@ -170,7 +177,10 @@ export default {
       const that = this
       that.loading = true
       getMenuList().then(res => {
+        that.total = res.total
         that.tableData = res.data
+        that.hidePage = !(that.total > 20)
+        that.paginationHeight = that.hidePage ? 0 : 42
         that.loading = false
       })
     },
@@ -288,7 +298,7 @@ export default {
 }
 
 .textAlign {
-  text-align: center;
+  text-align: right;
 }
 
 .isShow {
