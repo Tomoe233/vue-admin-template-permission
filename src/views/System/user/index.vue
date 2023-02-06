@@ -55,7 +55,7 @@
         </div>
       </el-header>
       <el-container>
-        <el-aside>
+        <el-aside v-if="!isShowsearch">
           <el-input
             v-model="filterText"
             size="small"
