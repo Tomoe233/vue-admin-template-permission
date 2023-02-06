@@ -6,7 +6,7 @@
           <div class="search" :class="isShowsearch ? 'isShow' : ''">
             <div class="searchInput">
               <div class="label labelRole">角色名称：</div>
-              <el-input v-model="roleName" size="small" placeholder="请输入菜单名称" />
+              <el-input v-model="roleName" size="small" placeholder="请输入角色名称" />
             </div>
             <div class="searchInput">
               <div class="label labelKey">权限字符：</div>
@@ -132,7 +132,6 @@ export default {
         value: '2',
         label: '停用'
       }],
-      roleTable: true, // 控制重新渲染表格
       tableData: [], // 表格数据
       total: 0, // 数据条数
       pageSize: 20, // 页码大小
@@ -214,7 +213,7 @@ export default {
         that.loading = false
       })
     },
-    // 搜索菜单名
+    // 搜索
     search() {
 
     },
@@ -252,7 +251,7 @@ export default {
       const that = this
       that.selectData = val
     },
-    // 删除菜单项
+    // 删除角色数据
     deleteRole(val) {
       const that = this
       if (val instanceof Array) {

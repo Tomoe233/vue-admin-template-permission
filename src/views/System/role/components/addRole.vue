@@ -51,7 +51,7 @@ export default {
   data() {
     return {
       Title: this.title,
-      roleForm: this.value, // 添加菜单表单数据
+      roleForm: this.value, // 添加角色表单数据
       rules: {}
     }
   },

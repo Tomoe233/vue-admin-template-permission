@@ -33,3 +33,16 @@ export function getRoleList() {
     method: 'get'
   })
 }
+
+/**
+ *
+ * @returns 用户管理接口
+ */
+
+// 获取角色管理表格数据
+export function getUserList() {
+  return request({
+    url: '/vue-admin-template/user/list',
+    method: 'get'
+  })
+}
