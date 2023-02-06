@@ -117,12 +117,12 @@
       </el-container>
     </el-container>
     <!-- 新增用户弹窗 -->
-    <add-user :title="addUserDialogTitle" :value.sync="addUserDialogValue" :add-user-dialog.sync="addUserDialog" />
+    <add-user :title="addUserDialogTitle" :value.sync="addUserDialogValue" :dept-tree="treeData" :add-user-dialog.sync="addUserDialog" />
   </div>
 </template>
 
 <script>
-import { getUserList } from '@/api/system'
+import { getUserList, getDeptList } from '@/api/system'
 import ExportExcel from '@/components/ExportExcel/index.vue'
 import addUser from './components/addUser'
 
@@ -151,41 +151,7 @@ export default {
         label: '停用'
       }],
       filterText: '',
-      treeData: [{
-        id: 1,
-        label: '一级 1',
-        children: [{
-          id: 4,
-          label: '二级 1-1',
-          children: [{
-            id: 9,
-            label: '三级 1-1-1'
-          }, {
-            id: 10,
-            label: '三级 1-1-2'
-          }]
-        }]
-      }, {
-        id: 2,
-        label: '一级 2',
-        children: [{
-          id: 5,
-          label: '二级 2-1'
-        }, {
-          id: 6,
-          label: '二级 2-2'
-        }]
-      }, {
-        id: 3,
-        label: '一级 3',
-        children: [{
-          id: 7,
-          label: '二级 3-1'
-        }, {
-          id: 8,
-          label: '二级 3-2'
-        }]
-      }],
+      treeData: [], // 部门tree数据
       defaultProps: {
         children: 'children',
         label: 'label'
@@ -250,6 +216,7 @@ export default {
   created() {
     const that = this
     that.getListData()
+    that.getDeptTree()
   },
   methods: {
     // 计算表格高度
@@ -272,6 +239,13 @@ export default {
         that.hidePage = !(that.total > 20)
         that.paginationHeight = that.hidePage ? 0 : 42
         that.loading = false
+      })
+    },
+    // 获取部门tree数据
+    getDeptTree() {
+      const that = this
+      getDeptList().then(res => {
+        that.treeData = res.data
       })
     },
     // 搜索

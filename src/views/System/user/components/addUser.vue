@@ -15,7 +15,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="归属部门" prop="department">
-              <el-input v-model="userForm.department" />
+              <!-- <el-input v-model="userForm.department" /> -->
+              <el-cascader v-model="userForm.department" :options="options" :props="{label:'label', value: 'label'}" :show-all-levels="false" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -97,12 +98,17 @@ export default {
     addUserDialog: {
       type: Boolean,
       default: null
+    },
+    deptTree: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
       Title: this.title,
       userForm: this.value, // 添加菜单表单数据
+      options: this.deptTree,
       // 性别下拉框数据
       sexOptions: [{
         value: '0',
@@ -135,6 +141,11 @@ export default {
     value(newValue) {
       if (newValue) {
         this.userForm = newValue
+      }
+    },
+    deptTree(newValue) {
+      if (newValue) {
+        this.options = newValue
       }
     }
   },

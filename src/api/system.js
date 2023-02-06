@@ -46,3 +46,11 @@ export function getUserList() {
     method: 'get'
   })
 }
+
+// 获取部门tree数据
+export function getDeptList() {
+  return request({
+    url: '/vue-admin-template/user/deptList',
+    method: 'get'
+  })
+}
