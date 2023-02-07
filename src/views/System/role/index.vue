@@ -241,7 +241,9 @@ export default {
       const that = this
       that.isShowsearch = !that.isShowsearch
       that.isShowSearchText = that.isShowsearch ? '显示搜索' : '隐藏搜索'
-      that.CalculationHeight()
+      setTimeout(() => {
+        that.CalculationHeight()
+      }, 250)
     },
     // 刷新表格
     refresh() {

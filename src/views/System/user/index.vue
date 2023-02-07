@@ -241,7 +241,40 @@ export default {
       that.loading = true
       getUserList().then(res => {
         that.total = res.total
-        that.tableData = res.data
+        // 展示用
+        that.tableData = [{
+          'userID': 1,
+          'userName': 'admin',
+          'role': ['admin'],
+          'userNickName': 'Tomoe',
+          'password': 'Aa112211!',
+          'department': '研发部门',
+          'phone': '17666666666',
+          'email': '1429521105@qq.com',
+          'sex': '0',
+          'state': true,
+          'creationTime': '2022-12-31 17:24:51',
+          'userRemarks': '我是xxx'
+        },
+        {
+          'userID': 2,
+          'userName': 'editor',
+          'role': ['editor'],
+          'userNickName': 'Nanami',
+          'password': 'Bb112211!',
+          'department': '销售部门',
+          'phone': '17688888888',
+          'email': 'Mxy319421@gmail.com',
+          'sex': '1',
+          'state': false,
+          'creationTime': '2022-12-31 17:24:51',
+          'userRemarks': '我是xxx'
+        }]
+        res.data.map((item, index) => {
+          that.tableData.push(item)
+        })
+        // 实际接口用
+        // that.tableData = res.data
         that.hidePage = !(that.total > 20)
         that.paginationHeight = that.hidePage ? 0 : 42
         that.loading = false
@@ -280,7 +313,9 @@ export default {
       const that = this
       that.isShowsearch = !that.isShowsearch
       that.isShowSearchText = that.isShowsearch ? '显示搜索' : '隐藏搜索'
-      that.CalculationHeight()
+      setTimeout(() => {
+        that.CalculationHeight()
+      }, 250)
     },
     // 刷新表格
     refresh() {
