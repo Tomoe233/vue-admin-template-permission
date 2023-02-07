@@ -16,6 +16,11 @@
               首页
             </el-dropdown-item>
           </router-link>
+          <router-link to="/User/profile">
+            <el-dropdown-item>
+              个人中心
+            </el-dropdown-item>
+          </router-link>
           <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">退出登录</span>
           </el-dropdown-item>
@@ -107,10 +112,12 @@ export default {
 
     .avatar-container {
       margin-right: 30px;
+      height: 100%;
 
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
+        height: 100%;
 
         .user-avatar {
           cursor: pointer;
