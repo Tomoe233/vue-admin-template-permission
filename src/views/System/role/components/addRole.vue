@@ -21,7 +21,7 @@
           <el-radio v-model="roleForm.state" :label="false">停用</el-radio>
         </el-form-item>
         <el-form-item label="备注" prop="roleRemarks">
-          <el-input v-model="roleForm.roleRemarks" />
+          <el-input v-model="roleForm.roleRemarks" type="textarea" :autosize="{ minRows: 1, maxRows: 4}" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">

@@ -71,7 +71,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="userRemarks">
-              <el-input v-model="userForm.userRemarks" />
+              <el-input v-model="userForm.userRemarks" type="textarea" :autosize="{ minRows: 1, maxRows: 4}" />
             </el-form-item>
           </el-col>
         </el-row>
