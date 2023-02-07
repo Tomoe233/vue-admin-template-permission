@@ -3,42 +3,44 @@
     <el-container>
       <el-header>
         <div ref="header">
-          <div class="search" :class="isShowsearch ? 'isShow' : ''">
-            <div class="searchInput">
-              <div class="label labelRole">角色名称：</div>
-              <el-input v-model="roleName" size="small" placeholder="请输入角色名称" />
-            </div>
-            <div class="searchInput">
-              <div class="label labelKey">权限字符：</div>
-              <el-input v-model="roleKey" size="small" placeholder="请输入权限字符" />
-            </div>
-            <div class="searchInput">
-              <div class="label labelState">状态：</div>
-              <el-select v-model="state" size="small" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+          <transition name="el-fade-in-linear">
+            <div v-if="!isShowsearch" class="search">
+              <div class="searchInput">
+                <div class="label labelRole">角色名称：</div>
+                <el-input v-model="roleName" size="small" placeholder="请输入角色名称" />
+              </div>
+              <div class="searchInput">
+                <div class="label labelKey">权限字符：</div>
+                <el-input v-model="roleKey" size="small" placeholder="请输入权限字符" />
+              </div>
+              <div class="searchInput">
+                <div class="label labelState">状态：</div>
+                <el-select v-model="state" size="small" placeholder="请选择">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </div>
+              <div class="searchInput">
+                <div class="label labelCreatTime">创建时间：</div>
+                <el-date-picker
+                  v-model="creatTime"
+                  type="daterange"
+                  size="small"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
                 />
-              </el-select>
+              </div>
+              <div class="searchButton">
+                <el-button type="primary" icon="el-icon-search" size="mini" @click="search">搜索</el-button>
+                <el-button type="warning" icon="el-icon-refresh" size="mini" @click="reset">重置</el-button>
+              </div>
             </div>
-            <div class="searchInput">
-              <div class="label labelCreatTime">创建时间：</div>
-              <el-date-picker
-                v-model="creatTime"
-                type="daterange"
-                size="small"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-              />
-            </div>
-            <div class="searchButton">
-              <el-button type="primary" icon="el-icon-search" size="mini" @click="search">搜索</el-button>
-              <el-button type="warning" icon="el-icon-refresh" size="mini" @click="reset">重置</el-button>
-            </div>
-          </div>
+          </transition>
           <div class="buttons">
             <el-button type="primary" icon="el-icon-plus" size="mini" plain @click="addRole('新增角色', {})">新增</el-button>
             <el-button type="success" icon="el-icon-edit" size="mini" plain :disabled="editButton" @click="addRole('修改角色', selectData[0])">修改</el-button>
@@ -349,9 +351,5 @@ export default {
 
 .textAlign {
   text-align: end;
-}
-
-.isShow {
-  display: none;
 }
 </style>

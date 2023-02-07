@@ -3,27 +3,29 @@
     <el-container>
       <el-header>
         <div ref="header">
-          <div class="search" :class="isShowsearch ? 'isShow' : ''">
-            <div class="searchInput">
-              <div class="label">菜单名称：</div>
-              <el-input v-model="menuValue" size="small" placeholder="请输入菜单名称" />
+          <transition name="el-fade-in-linear">
+            <div v-if="!isShowsearch" class="search">
+              <div class="searchInput">
+                <div class="label">菜单名称：</div>
+                <el-input v-model="menuValue" size="small" placeholder="请输入菜单名称" />
+              </div>
+              <div class="searchInput">
+                <div class="labelState">状态：</div>
+                <el-select v-model="state" size="small" placeholder="请选择">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </div>
+              <div class="searchButton">
+                <el-button type="primary" icon="el-icon-search" size="mini" @click="search">搜索</el-button>
+                <el-button type="warning" icon="el-icon-refresh" size="mini" @click="reset">重置</el-button>
+              </div>
             </div>
-            <div class="searchInput">
-              <div class="labelState">状态：</div>
-              <el-select v-model="state" size="small" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
-            </div>
-            <div class="searchButton">
-              <el-button type="primary" icon="el-icon-search" size="mini" @click="search">搜索</el-button>
-              <el-button type="warning" icon="el-icon-refresh" size="mini" @click="reset">重置</el-button>
-            </div>
-          </div>
+          </transition>
           <div class="buttons">
             <el-button type="primary" icon="el-icon-plus" size="mini" plain @click="addMenu('新增菜单')">新增</el-button>
             <el-button type="info" icon="el-icon-sort" size="mini" plain @click="isOpen">展开/折叠</el-button>
@@ -299,9 +301,5 @@ export default {
 
 .textAlign {
   text-align: right;
-}
-
-.isShow {
-  display: none;
 }
 </style>

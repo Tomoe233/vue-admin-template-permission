@@ -3,42 +3,44 @@
     <el-container>
       <el-header>
         <div ref="header">
-          <div class="search" :class="isShowsearch ? 'isShow' : ''">
-            <div class="searchInput">
-              <div class="label labelUsername">用户名称：</div>
-              <el-input v-model="userName" size="small" placeholder="请输入用户名称" />
-            </div>
-            <div class="searchInput">
-              <div class="label labelPhone">手机号码：</div>
-              <el-input v-model="phone" size="small" placeholder="请输入手机号码" />
-            </div>
-            <div class="searchInput">
-              <div class="label labelState">状态：</div>
-              <el-select v-model="state" size="small" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+          <transition name="el-fade-in-linear">
+            <div v-if="!isShowsearch" class="search">
+              <div class="searchInput">
+                <div class="label labelUsername">用户名称：</div>
+                <el-input v-model="userName" size="small" placeholder="请输入用户名称" />
+              </div>
+              <div class="searchInput">
+                <div class="label labelPhone">手机号码：</div>
+                <el-input v-model="phone" size="small" placeholder="请输入手机号码" />
+              </div>
+              <div class="searchInput">
+                <div class="label labelState">状态：</div>
+                <el-select v-model="state" size="small" placeholder="请选择">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </div>
+              <div class="searchInput">
+                <div class="label labelCreatTime">创建时间：</div>
+                <el-date-picker
+                  v-model="creatTime"
+                  type="daterange"
+                  size="small"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
                 />
-              </el-select>
+              </div>
+              <div class="searchButton">
+                <el-button type="primary" icon="el-icon-search" size="mini" @click="search">搜索</el-button>
+                <el-button type="warning" icon="el-icon-refresh" size="mini" @click="reset">重置</el-button>
+              </div>
             </div>
-            <div class="searchInput">
-              <div class="label labelCreatTime">创建时间：</div>
-              <el-date-picker
-                v-model="creatTime"
-                type="daterange"
-                size="small"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-              />
-            </div>
-            <div class="searchButton">
-              <el-button type="primary" icon="el-icon-search" size="mini" @click="search">搜索</el-button>
-              <el-button type="warning" icon="el-icon-refresh" size="mini" @click="reset">重置</el-button>
-            </div>
-          </div>
+          </transition>
           <div class="buttons">
             <el-button type="primary" icon="el-icon-plus" size="mini" plain @click="addUser('新增用户', {})">新增</el-button>
             <el-button type="success" icon="el-icon-edit" size="mini" plain :disabled="editButton" @click="addUser('修改用户', selectData[0])">修改</el-button>
@@ -55,52 +57,56 @@
         </div>
       </el-header>
       <el-container>
-        <el-aside v-if="!isShowsearch">
-          <el-input
-            v-model="filterText"
-            size="small"
-            class="filterText"
-            placeholder="请输入部门名称"
-          />
-          <el-tree
-            ref="tree"
-            :data="treeData"
-            :props="defaultProps"
-            default-expand-all
-            :filter-node-method="filterNode"
-          />
-        </el-aside>
+        <transition name="el-fade-in-linear">
+          <el-aside v-if="!isShowsearch">
+            <el-input
+              v-model="filterText"
+              size="small"
+              class="filterText"
+              placeholder="请输入部门名称"
+            />
+            <el-tree
+              ref="tree"
+              :data="treeData"
+              :props="defaultProps"
+              default-expand-all
+              :filter-node-method="filterNode"
+            />
+          </el-aside>
+        </transition>
         <el-main>
-          <el-table
-            id="userTable"
-            ref="table"
-            v-loading="loading"
-            :data="tableData"
-            stripe
-            :header-cell-style="{ width: '100%', background: '#f8f8f9', color: '#515a6e' }"
-            :height="windowHeight - 50 - 34 - 40 - headerHeight - 2 - 40 - paginationHeight"
-            @selection-change="handleSelectionChange"
-          >
-            <el-table-column type="selection" width="55" align="center" />
-            <el-table-column prop="userID" width="120" label="用户编号" align="center" />
-            <el-table-column prop="userName" label="用户名称" min-width="120" />
-            <el-table-column prop="userNickName" label="用户昵称" min-width="120" />
-            <el-table-column prop="department" label="部门" min-width="120" />
-            <el-table-column prop="phone" label="手机号码" min-width="120" />
-            <el-table-column prop="state" label="状态" align="center">
-              <template slot-scope="scope">
-                <el-switch v-model="scope.row.state" active-color="#13ce66" inactive-color="#ff4949" />
-              </template>
-            </el-table-column>
-            <el-table-column prop="creationTime" label="创建时间" min-width="150" align="center" />
-            <el-table-column label="操作" min-width="170" align="center">
-              <template slot-scope="scope">
-                <el-button type="text" size="mini" icon="el-icon-edit" @click="addUser('修改用户', scope.row)">修改</el-button>
-                <el-button type="text" size="mini" icon="el-icon-delete" @click="deleteUser(scope.row)">删除</el-button>
-                <el-button type="text" size="mini" icon="el-icon-d-arrow-right" @click="deleteUser(scope.row)">更多</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+          <transition name="el-fade-in-linear">
+            <el-table
+              id="userTable"
+              ref="table"
+              v-loading="loading"
+              :data="tableData"
+              stripe
+              :header-cell-style="{ width: '100%', background: '#f8f8f9', color: '#515a6e' }"
+              :height="windowHeight - 50 - 34 - 40 - headerHeight - 2 - 40 - paginationHeight"
+              @selection-change="handleSelectionChange"
+            >
+              <el-table-column type="selection" width="55" align="center" />
+              <el-table-column prop="userID" width="120" label="用户编号" align="center" />
+              <el-table-column prop="userName" label="用户名称" min-width="120" />
+              <el-table-column prop="userNickName" label="用户昵称" min-width="120" />
+              <el-table-column prop="department" label="部门" min-width="120" />
+              <el-table-column prop="phone" label="手机号码" min-width="120" />
+              <el-table-column prop="state" label="状态" align="center">
+                <template slot-scope="scope">
+                  <el-switch v-model="scope.row.state" active-color="#13ce66" inactive-color="#ff4949" />
+                </template>
+              </el-table-column>
+              <el-table-column prop="creationTime" label="创建时间" min-width="150" align="center" />
+              <el-table-column label="操作" min-width="170" align="center">
+                <template slot-scope="scope">
+                  <el-button type="text" size="mini" icon="el-icon-edit" @click="addUser('修改用户', scope.row)">修改</el-button>
+                  <el-button type="text" size="mini" icon="el-icon-delete" @click="deleteUser(scope.row)">删除</el-button>
+                  <el-button type="text" size="mini" icon="el-icon-d-arrow-right" @click="deleteUser(scope.row)">更多</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </transition>
           <el-pagination
             class="marginTop textAlign"
             background
@@ -397,9 +403,5 @@ export default {
 
 .textAlign {
   text-align: end;
-}
-
-.isShow {
-  display: none;
 }
 </style>
