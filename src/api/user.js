@@ -22,3 +22,11 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function getUserInfo(token) {
+  return request({
+    url: '/vue-admin-template/user/profile',
+    method: 'get',
+    params: { token }
+  })
+}

@@ -46,6 +46,7 @@
       <div class="tips">
         <span style="margin-right:20px;">username: admin || editor</span>
         <span> password: 123456</span>
+        <span style="margin-left: 20px;"><el-button type="primary" size="mini" @click="changeUsername">切换账号</el-button></span>
       </div>
 
     </el-form>
@@ -120,6 +121,9 @@ export default {
           return false
         }
       })
+    },
+    changeUsername() {
+      this.loginForm.username = this.loginForm.username === 'editor' ? 'admin' : 'editor'
     }
   }
 }
