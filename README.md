@@ -1,88 +1,120 @@
-# vue-admin-template
+# vue-admin-template-permission
 
-English | [简体中文](./README-zh.md)
+> 这是一个基于的 [vue-admin-template](https://github.com/PanJiaChen/vue-admin-template) 二次开发的项目。本项目添加了动态菜单栏、权限按钮、TagsView以及简单的系统管理页面和个人中心页面。
 
-> A minimal vue admin template with Element UI & axios & iconfont & permission control & lint
+## 展示
 
-**Live demo:** http://panjiachen.github.io/vue-admin-template
+界面设计参考的[若依](https://gitee.com/y_project/RuoYi-Vue)
 
+![image](https://github.com/vue-admin-template-permission/src/docs/image/admin.png)
 
-**The current version is `v4.0+` build on `vue-cli`. If you want to use the old version , you can switch branch to [tag/3.11.0](https://github.com/PanJiaChen/vue-admin-template/tree/tag/3.11.0), it does not rely on `vue-cli`**
+![image](https://github.com/vue-admin-template-permission/src/docs/image/editor.png)
 
-<p align="center">
-  <b>SPONSORED BY</b>
-</p>
-<p align="center">
-   <a href="https://finclip.com?from=vue_element" title="FinClip" target="_blank">
-      <img height="200px" src="https://gitee.com/panjiachen/gitee-cdn/raw/master/vue%E8%B5%9E%E5%8A%A9.png" title="FinClip">
-   </a>
-</p>
+修改了 ```getInfo``` 接口，根据不同角色返回不同菜单数据
+
+```javascript
+{
+  'admin-token': {
+    roles: ['admin'],
+    introduction: 'I am a super administrator',
+    avatar: 'http://inews.gtimg.com/newsapp_bt/0/13856645985/641',
+    name: 'Super Admin',
+    menus: [
+      {
+        'path': '/System',
+        'component': 'Layout',
+        'redirect': '/System/menu',
+        'name': 'System',
+        'meta': { title: '系统管理', icon: 'el-icon-setting' },
+        'children': [
+          {
+            'path': 'menu',
+            'name': 'Menu',
+            'component': 'System/menu/index',
+            'meta': { title: '菜单管理', icon: 'el-icon-menu' }
+          },
+          {
+            'path': 'role',
+            'name': 'Role',
+            'component': 'System/role/index',
+            'meta': { title: '角色管理', icon: 'el-icon-s-custom' }
+          },
+          {
+            'path': 'user',
+            'name': 'User',
+            'component': 'System/user/index',
+            'meta': { title: '用户管理', icon: 'el-icon-user-solid' }
+          }
+        ]
+      }
+    ]
+  },
+  'editor-token': {
+    roles: ['editor'],
+    introduction: 'I am an editor',
+    avatar: 'http://p4.itc.cn/images01/20200807/ac6e9d41a0bd42d0a02526c8d422ab16.jpeg',
+    name: 'Normal Editor',
+    menus: []
+  }
+}
+```
+
+![image](https://github.com/vue-admin-template-permission/src/docs/image/menu.png)
+
+![image](https://github.com/vue-admin-template-permission/src/docs/image/role.png)
+
+![image](https://github.com/vue-admin-template-permission/src/docs/image/user.png)
+
+![image](https://github.com/vue-admin-template-permission/src/docs/image/personalCenter.png)
 
 ## Build Setup
 
 ```bash
-# clone the project
-git clone https://github.com/PanJiaChen/vue-admin-template.git
+# 克隆项目
+git clone https://github.com/Tomoe233/vue-admin-template-permission.git
 
-# enter the project directory
-cd vue-admin-template
+# 进入项目目录
+cd vue-admin-template-permission
 
-# install dependency
+# 安装依赖
 npm install
 
-# develop
+# 建议不要直接使用 cnpm 安装以来，会有各种诡异的 bug。可以通过如下操作解决 npm 下载速度慢的问题
+npm install --registry=http://registry.npmmirror.com
+
+# 启动服务
 npm run dev
 ```
 
-This will automatically open http://localhost:9528
+浏览器访问 [http://localhost:9528](http://localhost:9528)
 
-## Build
+## 发布
 
 ```bash
-# build for test environment
+# 构建测试环境
 npm run build:stage
 
-# build for production environment
+# 构建生产环境
 npm run build:prod
 ```
 
-## Advanced
+## 其它
 
 ```bash
-# preview the release environment effect
+# 预览发布环境效果
 npm run preview
 
-# preview the release environment effect + static resource analysis
+# 预览发布环境效果 + 静态资源分析
 npm run preview -- --report
 
-# code format check
+# 代码格式检查
 npm run lint
 
-# code format check and auto fix
+# 代码格式检查并自动修复
 npm run lint -- --fix
 ```
 
-Refer to [Documentation](https://panjiachen.github.io/vue-element-admin-site/guide/essentials/deploy.html) for more information
-
-## Demo
-
-![demo](https://github.com/PanJiaChen/PanJiaChen.github.io/blob/master/images/demo.gif)
-
-## Extra
-
-If you want router permission && generate menu by user roles , you can use this branch [permission-control](https://github.com/PanJiaChen/vue-admin-template/tree/permission-control)
-
-For `typescript` version, you can use [vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template) (Credits: [@Armour](https://github.com/Armour))
-
-## Related Project
-
-- [vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)
-
-- [electron-vue-admin](https://github.com/PanJiaChen/electron-vue-admin)
-
-- [vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template)
-
-- [awesome-project](https://github.com/PanJiaChen/vue-element-admin/issues/2312)
+更多信息请参考 [使用文档](https://panjiachen.github.io/vue-element-admin-site/zh/)
 
 ## Browsers support
 
@@ -92,8 +124,3 @@ Modern browsers and Internet Explorer 10+.
 | --------- | --------- | --------- | --------- |
 | IE10, IE11, Edge| last 2 versions| last 2 versions| last 2 versions
 
-## License
-
-[MIT](https://github.com/PanJiaChen/vue-admin-template/blob/master/LICENSE) license.
-
-Copyright (c) 2017-present PanJiaChen
