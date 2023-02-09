@@ -6,9 +6,9 @@
 
 界面设计参考的[若依](https://gitee.com/y_project/RuoYi-Vue)
 
-![image](https://github.com/vue-admin-template-permission/src/docs/image/admin.png)
+![image](https://github.com/Tomoe233/vue-admin-template-permission/src/docs/image/admin.png)
 
-![image](https://github.com/vue-admin-template-permission/src/docs/image/editor.png)
+![image](https://github.com/Tomoe233/vue-admin-template-permission/src/docs/image/editor.png)
 
 修改了 ```getInfo``` 接口，根据不同角色返回不同菜单数据
 
@@ -59,13 +59,13 @@
 }
 ```
 
-![image](https://github.com/vue-admin-template-permission/src/docs/image/menu.png)
+![image](https://github.com/Tomoe233/vue-admin-template-permission/src/docs/image/menu.png)
 
-![image](https://github.com/vue-admin-template-permission/src/docs/image/role.png)
+![image](https://github.com/Tomoe233/vue-admin-template-permission/src/docs/image/role.png)
 
-![image](https://github.com/vue-admin-template-permission/src/docs/image/user.png)
+![image](https://github.com/Tomoe233/vue-admin-template-permission/src/docs/image/user.png)
 
-![image](https://github.com/vue-admin-template-permission/src/docs/image/personalCenter.png)
+![image](https://github.com/Tomoe233/vue-admin-template-permission/src/docs/image/personalCenter.png)
 
 ## Build Setup
 
