@@ -82,7 +82,16 @@
             <template slot-scope="scope">
               <el-button type="text" size="mini" icon="el-icon-edit" @click="addRole('修改角色', scope.row)">修改</el-button>
               <el-button type="text" size="mini" icon="el-icon-delete" @click="deleteRole(scope.row)">删除</el-button>
-              <el-button type="text" size="mini" icon="el-icon-d-arrow-right" @click="deleteRole(scope.row)">更多</el-button>
+              <!-- <el-button type="text" size="mini" icon="el-icon-d-arrow-right" @click="deleteRole(scope.row)">更多</el-button> -->
+              <el-dropdown size="mini">
+                <span class="el-dropdown-link">
+                  <i class="el-icon-d-arrow-right" />更多
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item icon="el-icon-connection">数据权限</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-user">用户分配</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </template>
           </el-table-column>
         </el-table>
@@ -345,6 +354,13 @@ export default {
 
 .buttons :nth-child(5), .buttons :nth-child(6) {
   float: right;
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409EFF;
+  font-size: 12px;
+  margin-left: 10px;
 }
 
 .marginTop {

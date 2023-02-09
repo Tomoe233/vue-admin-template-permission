@@ -102,7 +102,16 @@
                 <template slot-scope="scope">
                   <el-button type="text" size="mini" icon="el-icon-edit" @click="addUser('修改用户', scope.row)">修改</el-button>
                   <el-button type="text" size="mini" icon="el-icon-delete" @click="deleteUser(scope.row)">删除</el-button>
-                  <el-button type="text" size="mini" icon="el-icon-d-arrow-right" @click="deleteUser(scope.row)">更多</el-button>
+                  <!-- <el-button type="text" size="mini" icon="el-icon-d-arrow-right" @click="deleteUser(scope.row)">更多</el-button> -->
+                  <el-dropdown size="mini">
+                    <span class="el-dropdown-link">
+                      <i class="el-icon-d-arrow-right" />更多
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item icon="el-icon-connection">重置密码</el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-user">用户分配</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
                 </template>
               </el-table-column>
             </el-table>
@@ -430,6 +439,13 @@ export default {
 
 .filterText {
   margin-bottom: 10px;
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409EFF;
+  font-size: 12px;
+  margin-left: 10px;
 }
 
 .marginTop {
