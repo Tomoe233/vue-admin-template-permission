@@ -110,12 +110,12 @@
       </el-main>
     </el-container>
     <!-- 新增角色弹窗 -->
-    <add-role :title="addRoleDialogTitle" :value.sync="addRoleDialogValue" :add-role-dialog.sync="addRoleDialog" />
+    <add-role :title="addRoleDialogTitle" :value.sync="addRoleDialogValue" :menu.sync="menuTree" :add-role-dialog.sync="addRoleDialog" />
   </div>
 </template>
 
 <script>
-import { getRoleList } from '@/api/system'
+import { getRoleList, getMenuTreeList } from '@/api/system'
 import ExportExcel from '@/components/ExportExcel/index.vue'
 import addRole from './components/addRole'
 
@@ -143,6 +143,7 @@ export default {
         value: '2',
         label: '停用'
       }],
+      menuTree: [], // 菜单tree数据
       tableData: [], // 表格数据
       total: 0, // 数据条数
       pageSize: 20, // 页码大小
@@ -200,6 +201,7 @@ export default {
   created() {
     const that = this
     that.getListData()
+    that.getMenuTree()
   },
   methods: {
     // 计算表格高度
@@ -222,6 +224,15 @@ export default {
         that.hidePage = !(that.total > 20)
         that.paginationHeight = that.hidePage ? 0 : 42
         that.loading = false
+      })
+    },
+    // 获取菜单tree数据
+    getMenuTree() {
+      const that = this
+      getMenuTreeList().then(res => {
+        that.menuTree = res.data
+      }).catch(err => {
+        console.log(err)
       })
     },
     // 搜索

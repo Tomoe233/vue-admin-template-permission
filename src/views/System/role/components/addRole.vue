@@ -16,6 +16,25 @@
         <el-form-item label="角色顺序" prop="roleSort">
           <el-input-number v-model="roleForm.roleSort" controls-position="right" :min="1" :max="100" />
         </el-form-item>
+        <el-form-item label="菜单权限" prop="checkedKeys">
+          <el-checkbox v-model="open">展开/折叠</el-checkbox>
+          <el-checkbox v-model="selectAll">全选/全不选</el-checkbox>
+          <el-checkbox v-model="checked">父子联动</el-checkbox>
+          <el-tree
+            ref="tree"
+            class="tree-border"
+            :data="menu"
+            show-checkbox
+            :check-strictly="checkStrictly"
+            :default-expand-all="defaultExpandAll"
+            :default-expanded-keys="roleForm.expandedKeys"
+            :default-checked-keys="roleForm.checkedKeys"
+            node-key="id"
+            highlight-current
+            :props="defaultProps"
+            @check-change="checkChange(scope.row)"
+          />
+        </el-form-item>
         <el-form-item label="状态" prop="state">
           <el-radio v-model="roleForm.state" :label="true">正常</el-radio>
           <el-radio v-model="roleForm.state" :label="false">停用</el-radio>
@@ -43,6 +62,10 @@ export default {
       type: Object,
       default: () => {}
     },
+    menu: {
+      type: Array,
+      default: () => []
+    },
     addRoleDialog: {
       type: Boolean,
       default: null
@@ -50,9 +73,22 @@ export default {
   },
   data() {
     return {
-      Title: this.title,
+      Title: this.title, // dialog标题
       roleForm: this.value, // 添加角色表单数据
-      rules: {}
+      menuTree: this.menu, // 菜单tree数据
+      // 配置tree选项
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
+      open: false, // 展开/折叠选项状态
+      selectAll: false, // 全选/全不选选项状态
+      checked: true, // 父子联动选项状态
+      checkStrictly: false, // 是否严格的遵循父子不互相关联
+      defaultExpandAll: false, // 默认不展开tree
+      rules: {
+        checkedKeys: [{ type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }]
+      }
     }
   },
   watch: {
@@ -66,10 +102,39 @@ export default {
       if (newValue) {
         this.roleForm = newValue
       }
+    },
+    menu(newValue) {
+      if (newValue) {
+        this.menuTree = newValue
+      }
+    },
+    open(newValue) {
+      this.defaultExpandAll = newValue
+      const nodes = this.$refs.tree.store._getAllNodes()
+      for (const i in nodes) {
+        nodes[i].expanded = this.defaultExpandAll
+      }
+    },
+    selectAll(newValue) {
+      if (newValue) {
+        // 全选
+        this.$refs.tree.setCheckedNodes(this.menuTree)
+      } else {
+        // 全不选
+        this.$refs.tree.setCheckedNodes([])
+      }
+    },
+    checked(newValue) {
+      this.checkStrictly = !newValue
     }
   },
   created() {},
   methods: {
+    checkChange(val) {
+      const that = this
+      console.log(val)
+      that.roleForm.checkedKeys = that.$refs.tree.getCheckedKeys()
+    },
     // 提交
     Submit() {
       const that = this
@@ -89,6 +154,7 @@ export default {
     // 关闭角色弹窗
     handleClose() {
       const that = this
+      that.$refs.tree.setCheckedKeys([])
       that.$refs.roleForm.resetFields()
       that.$emit('update:addRoleDialog', false)
     }
@@ -96,5 +162,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+.tree-border {
+  margin-top: 5px;
+  border: 1px solid #e5e6e7;
+  background: #fff none;
+  border-radius: 4px;
+}
 </style>

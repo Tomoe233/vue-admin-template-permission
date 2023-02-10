@@ -34,6 +34,14 @@ export function getRoleList() {
   })
 }
 
+// 获取角色管理表格数据
+export function getMenuTreeList() {
+  return request({
+    url: '/vue-admin-template/role/menuTree',
+    method: 'get'
+  })
+}
+
 /**
  *
  * @returns 用户管理接口
