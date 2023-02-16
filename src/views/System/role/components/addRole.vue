@@ -5,6 +5,7 @@
       :visible.sync="addRoleDialog"
       width="680px"
       :before-close="handleClose"
+      :destroy-on-close="false"
     >
       <el-form ref="roleForm" :model="roleForm" :rules="rules" label-width="100px">
         <el-form-item label="角色名称" prop="roleName">
@@ -16,24 +17,26 @@
         <el-form-item label="角色顺序" prop="roleSort">
           <el-input-number v-model="roleForm.roleSort" controls-position="right" :min="1" :max="100" />
         </el-form-item>
-        <el-form-item label="菜单权限" prop="checkedKeys">
+        <el-form-item label="菜单权限">
           <el-checkbox v-model="open">展开/折叠</el-checkbox>
           <el-checkbox v-model="selectAll">全选/全不选</el-checkbox>
           <el-checkbox v-model="checked">父子联动</el-checkbox>
-          <el-tree
-            ref="tree"
-            class="tree-border"
-            :data="menu"
-            show-checkbox
-            :check-strictly="checkStrictly"
-            :default-expand-all="defaultExpandAll"
-            :default-expanded-keys="roleForm.expandedKeys"
-            :default-checked-keys="roleForm.checkedKeys"
-            node-key="id"
-            highlight-current
-            :props="defaultProps"
-            @check-change="checkChange(scope.row)"
-          />
+          <el-form-item prop="checkedKeys">
+            <el-tree
+              ref="tree"
+              class="tree-border"
+              :data="menu"
+              show-checkbox
+              :check-strictly="checkStrictly"
+              :default-expand-all="defaultExpandAll"
+              :default-expanded-keys="roleForm.expandedKeys"
+              :default-checked-keys="roleForm.checkedKeys"
+              node-key="id"
+              highlight-current
+              :props="defaultProps"
+              @check-change="checkChange"
+            />
+          </el-form-item>
         </el-form-item>
         <el-form-item label="状态" prop="state">
           <el-radio v-model="roleForm.state" :label="true">正常</el-radio>
@@ -87,7 +90,7 @@ export default {
       checkStrictly: false, // 是否严格的遵循父子不互相关联
       defaultExpandAll: false, // 默认不展开tree
       rules: {
-        checkedKeys: [{ type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }]
+        checkedKeys: [{ type: 'array', required: true, message: '请至少选择一个菜单', trigger: 'change' }]
       }
     }
   },
@@ -121,7 +124,9 @@ export default {
         this.$refs.tree.setCheckedNodes(this.menuTree)
       } else {
         // 全不选
-        this.$refs.tree.setCheckedNodes([])
+        this.$nextTick(() => {
+          this.$refs.tree.setCheckedNodes([])
+        })
       }
     },
     checked(newValue) {
@@ -130,9 +135,8 @@ export default {
   },
   created() {},
   methods: {
-    checkChange(val) {
+    checkChange() {
       const that = this
-      console.log(val)
       that.roleForm.checkedKeys = that.$refs.tree.getCheckedKeys()
     },
     // 提交
@@ -154,8 +158,15 @@ export default {
     // 关闭角色弹窗
     handleClose() {
       const that = this
+      that.open = false
+      that.selectAll = false
+      that.checked = true
+      that.roleForm = {}
       that.$refs.tree.setCheckedKeys([])
-      that.$refs.roleForm.resetFields()
+      that.$nextTick(() => {
+        that.$refs.roleForm.clearValidate()
+      })
+      // that.$refs.roleForm.resetFields()
       that.$emit('update:addRoleDialog', false)
     }
   }
