@@ -102,14 +102,13 @@
                 <template slot-scope="scope">
                   <el-button type="text" size="mini" icon="el-icon-edit" @click="addUser('修改用户', scope.row)">修改</el-button>
                   <el-button type="text" size="mini" icon="el-icon-delete" @click="deleteUser(scope.row)">删除</el-button>
-                  <!-- <el-button type="text" size="mini" icon="el-icon-d-arrow-right" @click="deleteUser(scope.row)">更多</el-button> -->
-                  <el-dropdown size="mini">
+                  <el-dropdown size="mini" @command="(command) => { handleCommand(command, scope.row) }">
                     <span class="el-dropdown-link">
                       <i class="el-icon-d-arrow-right" />更多
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item icon="el-icon-connection">重置密码</el-dropdown-item>
-                      <el-dropdown-item icon="el-icon-user">用户分配</el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-connection" command="a">重置密码</el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-user" command="a">用户分配</el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
                 </template>
@@ -133,6 +132,7 @@
     </el-container>
     <!-- 新增用户弹窗 -->
     <add-user :title="addUserDialogTitle" :value.sync="addUserDialogValue" :dept-tree="treeData" :add-user-dialog.sync="addUserDialog" />
+    <reset-pwd :user-name="resetPwdDialogUserName" :reset-pwd-dialog.sync="resetPwdDialog" />
   </div>
 </template>
 
@@ -140,14 +140,15 @@
 import { getUserList, getDeptList } from '@/api/system'
 import ExportExcel from '@/components/ExportExcel/index.vue'
 import addUser from './components/addUser'
+import resetPwd from './components/resetPwd'
 
 export default {
-  components: { ExportExcel, addUser },
+  components: { ExportExcel, addUser, resetPwd },
   data() {
     return {
       headerHeight: '', // 实时header高度
       windowHeight: document.documentElement.clientHeight, // 实时屏幕高度
-      paginationHeight: '',
+      paginationHeight: '', // 分页高度
       loading: false,
       editButton: true, // 控制修改按钮是否禁用
       deleteButtom: true, // 控制删除按钮是否禁用
@@ -180,7 +181,9 @@ export default {
       deleteDataList: [], // 选中删除数据列表
       addUserDialogTitle: '', // 新增用户弹窗标题
       addUserDialogValue: {}, // 用户弹窗数据
-      addUserDialog: false // 添加用户弹窗
+      addUserDialog: false, // 添加用户弹窗
+      resetPwdDialogUserName: '', // 重置密码用户名
+      resetPwdDialog: false // 重置密码弹窗
     }
   },
   watch: {
@@ -311,7 +314,6 @@ export default {
     },
     // 新增&修改用户
     addUser(title, val) {
-      console.log(title, val)
       const that = this
       that.addUserDialogTitle = title
       that.addUserDialogValue = JSON.parse(JSON.stringify(val))
@@ -368,6 +370,20 @@ export default {
         })
       })
       that.deleteDataList = ''
+    },
+    handleCommand(command, val) {
+      if (command === 'a') {
+        // 重置密码
+        this.resetPwd(val)
+      } else {
+        // 用户分配
+      }
+    },
+    // 重置密码
+    resetPwd(val) {
+      const that = this
+      that.resetPwdDialogUserName = val.userName
+      that.resetPwdDialog = true
     },
     // 变更页码大小
     handleSizeChange(val) {
