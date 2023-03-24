@@ -108,7 +108,7 @@
                     </span>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item icon="el-icon-connection" command="a">重置密码</el-dropdown-item>
-                      <el-dropdown-item icon="el-icon-user" command="a">用户分配</el-dropdown-item>
+                      <el-dropdown-item icon="el-icon-user" command="b">分配角色</el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
                 </template>
@@ -371,12 +371,14 @@ export default {
       })
       that.deleteDataList = ''
     },
+    // 判断点击选项
     handleCommand(command, val) {
       if (command === 'a') {
         // 重置密码
         this.resetPwd(val)
       } else {
         // 用户分配
+        this.assignRoles(val)
       }
     },
     // 重置密码
@@ -384,6 +386,10 @@ export default {
       const that = this
       that.resetPwdDialogUserName = val.userName
       that.resetPwdDialog = true
+    },
+    // 用户分配
+    assignRoles(val) {
+      this.$router.push({ path: '/System/assignRoles' })
     },
     // 变更页码大小
     handleSizeChange(val) {
