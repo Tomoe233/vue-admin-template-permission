@@ -62,3 +62,12 @@ export function getDeptList() {
     method: 'get'
   })
 }
+
+// 获取用户信息及角色数据
+export function getAuthRole(id) {
+  return request({
+    url: '/vue-admin-template/user/authRole',
+    method: 'get',
+    params: { id }
+  })
+}

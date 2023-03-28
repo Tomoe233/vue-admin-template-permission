@@ -58,7 +58,7 @@
       </el-header>
       <el-container>
         <transition name="el-fade-in-linear">
-          <el-aside v-if="!isShowsearch">
+          <el-aside v-if="!isShowsearch" width="230px">
             <el-input
               v-model="filterText"
               size="small"
@@ -176,7 +176,7 @@ export default {
       total: 0, // 数据条数
       pageSize: 20, // 页码大小
       page: 1, // 当前页码
-      hidePage: '', // 页数小于1时隐藏分页
+      hidePage: '', // 是否隐藏分页
       selectData: '', // 选中表格数据
       deleteDataList: [], // 选中删除数据列表
       addUserDialogTitle: '', // 新增用户弹窗标题
@@ -389,7 +389,7 @@ export default {
     },
     // 用户分配
     assignRoles(val) {
-      this.$router.push({ path: '/System/assignRoles' })
+      this.$router.push({ path: '/System/assignRoles', query: { id: val.userID }})
     },
     // 变更页码大小
     handleSizeChange(val) {
